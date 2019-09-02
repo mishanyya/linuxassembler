@@ -1,32 +1,34 @@
 SECTION .data
-msg db "Кашин",0xa
-len equ $ - msg
-buffer resb 100
+msg db "Введите данные",0xa  ;адрес первого символа переменной с текстом
+len equ $ - msg              ;длина переменной (в символах)
+letter resb 10               ;создание переменной letter и выделение ей памяти в 10 байт
+len1 equ $ - letter          ;длина переменной (равна 10 символам)
 
 SECTION .text
-global _start ; the program entry point
+global _start
 _start:
-;вывод
-mov eax, 4 ; 'write' syscall
-mov ebx, 1 ; file descr. 1 (stdout)
-mov ecx, msg ; pointer to the data
-mov edx, len ; amount of data
-int 0x80 ; call to the kernel
+                   ;блок вывода переменной
+mov eax, 4         ;4 - означает вывод или запись в файл
+mov ebx, 1         ;1 - дескриптор, необходимый для вывода
+mov ecx, msg       ;в ecx помещается адрес первого символа переменной
+mov edx, len       ;в edx помещается количество символов в переменной
+int 0x80           ;запуск процесса вывода
 
-;ввод
-mov eax, 3 ; 'write' syscall
-mov ebx, 0 ; file descr. 1 (stdout)
-mov ecx, buffer ; pointer to the data
-mov edx, 100 ; amount of data
-int 0x80 ; call to the kernel
+                   ;блок ввода символов
+mov eax, 3         ;3 - означает ввод
+mov ebx, 0         ;0 - дескриптор, необходимый для ввода
+mov ecx, letter    ;в ecx помещается адрес первого символа из buffer
+mov edx, len1      ;в edx помещается количество символов в переменной, остальные заполнятся нулями
+int 0x80           ;запуск процесса ввода
 
-;вывод
-mov eax, 4 ; 'write' syscall
-mov ebx, 1 ; file descr. 1 (stdout)
-mov ecx, buffer ; pointer to the data
-mov edx, 100 ; amount of data
-int 0x80 ; call to the kernel
+                   ;блок вывода переменной
+mov eax, 4         ;4 - означает вывод или запись в файл
+mov ebx, 1         ;1 - дескриптор, необходимый для вывода
+mov ecx, letter    ;в ecx помещается адрес первого символа переменной buffer
+mov edx, len1       ;в edx помещается количество символов в переменной buffer
+int 0x80           ;запуск процесса вывода
 
-mov eax, 1 ; '_exit' syscall
-mov ebx, 0 ; zero exit code (success)
-int 0x80 ; call to the kernel
+                   ;блок передачи управления ОС
+mov eax, 1         ;1 - означает передачу управления ОС
+mov ebx, 0         ;0 - дескриптор, необходимый для выхода
+int 0x80           ;запуск процесса выхода из этой программы в ОС
