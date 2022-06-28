@@ -11,6 +11,8 @@ section .data
     message3:  db "Вы ввели b!",0xa,0               ;сообщение ответа, адрес начала строки
     ln3 equ $-message3                          ;длина сообщения
 
+section .bss
+
     enter: resb 1                                ;выделение памяти в 1 байт переменной enter
     lne equ $-enter                            ;длина сообщения
 
